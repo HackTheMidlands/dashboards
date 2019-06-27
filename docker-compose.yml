@@ -1,0 +1,26 @@
+version: '3.5'
+volumes:
+  grafana:
+  influxdb:
+services:
+  db:
+    image: 'influxdb'
+    environment:
+      - INFLUXDB_DB=test
+    volumes:
+      - influxdb:/var/lib/influxdb
+  grafana:
+    image: 'grafana/grafana'
+    volumes:
+      - grafana:/var/lib/grafana
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+  flask:
+    build:
+      context: '.'
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
